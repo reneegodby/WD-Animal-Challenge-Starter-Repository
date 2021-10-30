@@ -1,19 +1,14 @@
 const express = require("express");
 const db = require("./db");
-
 const app = express();
-
-// app.use('/test', (req, res) => {
-//   res.send('TESTING 123')
-// })
+const controllers = require("./controllers");
 
 app.use(require("./middleware/headers"));
 
-const controllers = require("./controllers");
-
 app.use(express.json());
 
-app.use("/user", controllers.usercontroller);
+app.use("/user", controllers.usercontroller); //bronze challenge
+//http://localhost:3000/user
 
 db.authenticate()
   .then(() => db.sync()) // => {force: true}
