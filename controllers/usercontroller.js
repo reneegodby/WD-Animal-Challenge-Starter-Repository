@@ -13,11 +13,14 @@ router.post("/create", async (req, res) => {
     const userInfo = await User.create({
       //line 4
       username,
-      password,
+      password: bcrypt.hashSync(password, 13),
     });
-    res.status(201).json({
-      message: "User successfully registered",
+    let token = jwt.sign({id: userInfo.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+
+    res.status(200).json({
+      message: "User successfully created",
       user: userInfo,
+      sessionToken: token
     });
   } catch (err) {
     if (err instanceof UniqueConstraintError) {
@@ -26,13 +29,14 @@ router.post("/create", async (req, res) => {
       });
     } else {
       res.status(500).json({
-        message: "Failed to register user",
+        message: "Failed to create user",
       });
     }
   }
 });
 
 router.post("/login", async (req, res) => {
+  //Silver Challenge
   let { username, password } = req.body.user;
 
   try {
@@ -41,21 +45,37 @@ router.post("/login", async (req, res) => {
         username: username,
       },
     });
-    if(loginUser) {
-      res.status(200).json({
-      user: loginUser,
-      message: "User successfully logged in!",
-      
-    });
-  } else{
-    res.status(401).json({
-      message: "Incorrect email or password"
-    })
-  }
-} catch (error) {
+
+    //GOLD CHALLENGE
+    if (loginUser) {
+      let passwordComparison = await bcrypt.compare(  
+        password,
+        loginUser.password
+      );
+      if (passwordComparison) {
+        let token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET, {
+          expiresIn: 60 * 60 * 24,
+        });
+
+        res.status(200).json({
+          user: loginUser,
+          message: "User successfully logged in!",
+          sessionToken: token
+        });
+      } else {
+        res.status(401).json({
+          message: "Incorrect email or password",
+        });
+      }
+    } else {
+      res.status(401).json({
+        message: "Incorrect email or password",
+      });
+    }
+  } catch (error) {
     res.status(500).json({
-      message: "failed to log user in",
-    })
+      message: "Failed to log user in",
+    });
   }
 });
 
