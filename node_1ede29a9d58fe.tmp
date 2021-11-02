@@ -15,13 +15,13 @@ app.use(express.json());
 app.use("/user", controllers.usercontroller);
  //bronze challenge 1 //http://localhost:3000/user
 
-app.use("/animal", controllers.animalcontroller);
+// app.use("/animal", controllers.animalcontroller);
 
 db.authenticate()
   .then(() => db.sync()) // => {force: true}
   .then(() => {
-    app.listen(3002, () =>
-      console.log(`[Server: ] App is listening on Port ${3002}`)
+    app.listen(3001, () =>
+      console.log(`[Server: ] App is listening on Port ${3001}`)
     );
   })
   .catch((err) => {

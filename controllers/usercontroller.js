@@ -17,7 +17,7 @@ router.post("/create", async (req, res) => {
     });
     let token = jwt.sign({id: userInfo.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
 
-    res.status(200).json({
+    res.status(201).json({
       message: "User successfully created",
       user: userInfo,
       sessionToken: token
@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
       }
     } else {
       res.status(401).json({
-        message: "Incorrect email or password",
+        message: "Login failed",
       });
     }
   } catch (error) {
