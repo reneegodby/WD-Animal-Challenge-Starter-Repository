@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { Animal } = require("../models");
+let validateJWT = require("../middleware/validate-jwt");
 
 //Challenge 2 Bronze
-router.post("/create", async (req, res) => {
+router.post("/create", validateJWT, async (req, res) => {
   let { name, legNumber, predator } = req.body.animal;
   // let {id} = re.user;  Why don't we need this?
   let animalEntry = {
@@ -25,7 +26,7 @@ router.post("/create", async (req, res) => {
 });
 
 //Get all animals Challenge 2 Bronze
-router.get("/", async (req, res) => {
+router.get("/", validateJWT, async (req, res) => {
   try {
     const animals = await Animal.findAll();
     res.status(201).json(animals);
@@ -34,7 +35,7 @@ router.get("/", async (req, res) => {
   }
 });
 //Challenge 2 Silver Delete item
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", validateJWT, async (req, res) => {
   const animalId = req.params.id;
 
   try {
@@ -51,7 +52,7 @@ router.delete("/delete/:id", async (req, res) => {
 });
 
 //Challenge 2 Gold
-router.put("/update/:animalId", async (req, res) => {
+router.put("/update/:animalId", validateJWT, async (req, res) => {
   const { name, legNumber, predator } = req.body.animal;
   const animalId = req.params.animalId;
 
