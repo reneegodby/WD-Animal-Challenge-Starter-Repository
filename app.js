@@ -14,7 +14,7 @@ app.use(require("./middleware/validate-jwt"));
 app.use("/animal", controllers.animalcontroller);
 
 db.authenticate()
-  .then(() => db.sync()) // => {force: true}
+  .then(() => db.sync({force: true})) // => {force: true}
   .then(() => {
     app.listen(3002, () =>
       console.log(`[Server: ] App is listening on Port ${3002}`)

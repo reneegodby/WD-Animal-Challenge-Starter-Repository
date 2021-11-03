@@ -6,11 +6,13 @@ let validateJWT = require("../middleware/validate-jwt");
 //Challenge 2 Bronze
 router.post("/create", validateJWT, async (req, res) => {
   let { name, legNumber, predator } = req.body.animal;
-  // let {id} = re.user;  Why don't we need this?
+  let {id} = req.user;
+
   let animalEntry = {
     name,
     legNumber,
     predator,
+    userId: id
   };
   try {
     const newAnimal = await Animal.create(animalEntry);
@@ -66,6 +68,7 @@ router.put("/update/:animalId", validateJWT, async (req, res) => {
     name: name,
     legNumber: legNumber,
     predator: predator,
+    userId: id
   };
 
   try {
