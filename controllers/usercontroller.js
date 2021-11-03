@@ -15,12 +15,14 @@ router.post("/create", async (req, res) => {
       username,
       password: bcrypt.hashSync(password, 13),
     });
-    let token = jwt.sign({id: userInfo.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+    let token = jwt.sign({ id: userInfo.id }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 24,
+    });
 
     res.status(201).json({
       message: "User successfully created",
       user: userInfo,
-      sessionToken: token
+      sessionToken: token,
     });
   } catch (err) {
     if (err instanceof UniqueConstraintError) {
@@ -48,7 +50,7 @@ router.post("/login", async (req, res) => {
 
     //GOLD CHALLENGE
     if (loginUser) {
-      let passwordComparison = await bcrypt.compare(  
+      let passwordComparison = await bcrypt.compare(
         password,
         loginUser.password
       );
@@ -60,7 +62,7 @@ router.post("/login", async (req, res) => {
         res.status(200).json({
           user: loginUser,
           message: "User successfully logged in!",
-          sessionToken: token
+          sessionToken: token,
         });
       } else {
         res.status(401).json({

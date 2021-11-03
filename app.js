@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use("/user", controllers.usercontroller);
  //bronze challenge 1 //http://localhost:3000/user
-
+app.use(require(".middleware/validate-jwt"));
 app.use("/animal", controllers.animalcontroller);
 
 db.authenticate()
