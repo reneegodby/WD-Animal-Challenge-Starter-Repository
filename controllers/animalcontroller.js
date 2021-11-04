@@ -39,11 +39,14 @@ router.get("/", validateJWT, async (req, res) => {
 //Challenge 2 Silver Delete item
 router.delete("/delete/:id", validateJWT, async (req, res) => {
   const animalId = req.params.id;
+  const ownerId = req.user.id;
+  
 
   try {
     const query = {
       where: {
         id: animalId,
+        userId: ownerId
       },
     };
     await Animal.destroy(query);
@@ -61,6 +64,7 @@ router.put("/update/:animalId", validateJWT, async (req, res) => {
   const query = {
     where: {
       id: animalId,
+      
     },
   };
 
